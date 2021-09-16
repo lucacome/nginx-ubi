@@ -1,0 +1,109 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+    branches:
+      - main
+
+env:
+  PLATFORMS: "linux/amd64,linux/arm64"
+  BUILD_PLATFORMS: "linux/ppc64le,linux/s390x"
+
+jobs:
+    build-docker:
+      name: Build Docker Image
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Cancel Previous Runs
+          uses: styfle/cancel-workflow-action@0.9.1
+          with:
+            access_token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Cache Docker layers
+          uses: actions/cache@v2
+          with:
+            path: /tmp/.buildx-cache
+            key: ${{ runner.os }}-buildx-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-buildx-
+
+        - name: Output Variables
+          id: var
+          run: |
+            nginx_v=$(grep -m1 'FROM nginx:' <Dockerfile | awk -F'[: ]' '{print $3}')
+            njs=$(docker run nginx:1.21.3 env | grep NJS_VERSION | cut -d= -f2)
+            echo "NJS_VERSION=$njs"
+            echo "::set-output name=nginx_version::$nginx_v"
+            echo "::set-output name=njs_version::$njs"
+
+        - name: Setup QEMU
+          uses: docker/setup-qemu-action@v1
+          with:
+            platforms: arm,arm64,ppc64le,s390x
+          if: github.event_name != 'pull_request'
+
+        - name: Docker Buildx
+          uses: docker/setup-buildx-action@v1
+
+        - name: DockerHub Login
+          uses: docker/login-action@v1
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+          if: github.event_name != 'pull_request'
+
+        - name: Docker meta
+          id: meta
+          uses: docker/metadata-action@v3
+          with:
+            images: lucacome/nginx-ubi
+            tags: |
+              type=raw,value=${{ steps.var.outputs.nginx_version }}
+
+        - name: Build from source
+          uses: docker/build-push-action@v2
+          id: build
+          with:
+            pull: true
+            push: ${{ github.event_name != 'pull_request' }}
+            load: ${{ github.event_name == 'pull_request' }}
+            platforms: ${{ env.BUILD_PLATFORMS }}
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
+            cache-from: type=local,src=/tmp/.buildx-cache
+            cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+            target: final
+            build-args: |
+              NGINX=${{ steps.var.outputs.nginx_version }}
+              NJS=${{ steps.var.outputs.njs_version }}
+
+        - name: Build prebuilt
+          uses: docker/build-push-action@v2
+          id: build-prebuilt
+          with:
+            pull: true
+            push: ${{ github.event_name != 'pull_request' }}
+            load: ${{ github.event_name == 'pull_request' }}
+            platforms: ${{ env.PLATFORMS }}
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
+            cache-from: type=local,src=/tmp/.buildx-cache
+            cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+            target: final
+            file: Dockerfile.prebuilt
+            build-args: |
+              NGINX=${{ steps.var.outputs.nginx_version }}
+              NJS=${{ steps.var.outputs.njs_version }}
+
+        - name: Combine images
+          run: |
+            docker buildx imagetools create lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ${{ steps.meta.outputs.tags }}
+            docker buildx imagetools create lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag lucacome/nginx-ubi:latest
+          if: github.event_name != 'pull_request'
