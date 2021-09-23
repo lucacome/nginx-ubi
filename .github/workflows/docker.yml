@@ -63,7 +63,7 @@ jobs:
           id: meta
           uses: docker/metadata-action@v3
           with:
-            images: lucacome/nginx-ubi
+            images: nginxcontrib/nginx-ubi
             tags: |
               type=raw,value=${{ steps.var.outputs.nginx_version }}
 
@@ -104,6 +104,6 @@ jobs:
 
         - name: Combine images
           run: |
-            docker buildx imagetools create lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ${{ steps.meta.outputs.tags }}
-            docker buildx imagetools create lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag lucacome/nginx-ubi:latest
+            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ${{ steps.meta.outputs.tags }}
+            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:latest
           if: github.event_name != 'pull_request'
