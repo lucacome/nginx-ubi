@@ -105,4 +105,5 @@ jobs:
         - name: Combine images
           run: |
             docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ${{ steps.meta.outputs.tags }}
+            docker buildx imagetools create ${{ steps.meta.outputs.tags }} --tag nginxcontrib/nginx-ubi:latest
           if: github.event_name != 'pull_request'
