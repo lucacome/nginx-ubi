@@ -109,8 +109,8 @@ jobs:
 
         - name: Combine images
           run: |
-            docker buildx imagetools create --dry-run nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
-            docker buildx imagetools create --dry-run nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:latest
-            docker buildx imagetools create --dry-run ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
-            docker buildx imagetools create --dry-run ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:latest
+            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
+            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx-ubi:latest
+            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
+            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx-ubi:latest
           if: github.event_name != 'pull_request'
