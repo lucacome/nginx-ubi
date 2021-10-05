@@ -29,14 +29,6 @@ jobs:
         - name: Checkout Repository
           uses: actions/checkout@v2
 
-        - name: Cache Docker layers
-          uses: actions/cache@v2
-          with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-
-
         - name: Output Variables
           id: var
           run: |
@@ -62,11 +54,21 @@ jobs:
             password: ${{ secrets.DOCKER_PASSWORD }}
           if: github.event_name != 'pull_request'
 
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v1
+          with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+          if: github.event_name != 'pull_request'
+
         - name: Docker meta
           id: meta
           uses: docker/metadata-action@v3
           with:
-            images: nginxcontrib/nginx-ubi
+            images: |
+              nginxcontrib/nginx-ubi
+              ghcr.io/lucacome/nginx-ubi
             tags: |
               type=raw,value=${{ steps.var.outputs.nginx_version }}
 
@@ -80,8 +82,8 @@ jobs:
             platforms: ${{ env.BUILD_PLATFORMS }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
-            cache-from: type=local,src=/tmp/.buildx-cache
-            cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+            cache-from: type=gha,scope=source
+            cache-to: type=gha,scope=source,mode=max
             target: final
             build-args: |
               NGINX=${{ steps.var.outputs.nginx_version }}
@@ -97,8 +99,8 @@ jobs:
             platforms: ${{ env.PLATFORMS }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
-            cache-from: type=local,src=/tmp/.buildx-cache
-            cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+            cache-from: type=gha,scope=prebuilt
+            cache-to: type=gha,scope=prebuilt,mode=max
             target: final
             file: Dockerfile.prebuilt
             build-args: |
@@ -107,6 +109,8 @@ jobs:
 
         - name: Combine images
           run: |
-            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ${{ steps.meta.outputs.tags }}
-            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:latest
+            docker buildx imagetools create --dry-run nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
+            docker buildx imagetools create --dry-run nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:latest
+            docker buildx imagetools create --dry-run ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
+            docker buildx imagetools create --dry-run ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:latest
           if: github.event_name != 'pull_request'

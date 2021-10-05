@@ -1,3 +1,4 @@
+# UBI based Docker image for NGINX
 <p align="left">
 <a href="https://hub.docker.com/r/nginxcontrib/nginx-ubi"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/nginxcontrib/nginx-ubi?style=flat-square"></a>
 <a href="https://hub.docker.com/r/nginxcontrib/nginx-ubi/tags?page=1&ordering=last_updated"><img alt="Docker Image Size (tag)" src="https://img.shields.io/docker/image-size/nginxcontrib/nginx-ubi/latest?style=flat-square">
@@ -7,9 +8,7 @@
 <img alt="GitHub" src="https://img.shields.io/github/license/lucacome/nginx-ubi?style=flat-square">
 </p>
 
-# UBI based Docker image for NGINX
-
-This repository contains the Dockerfiles for building an UBI based image with NGINX for multiple architectures.
+This repository contains the Dockerfiles for building a Red Hat Universal Base image with NGINX, for multiple architectures.
 
 Currently supported linux architectures: `amd64`, `arm64`, `ppc64le`, `s390x`.
 
