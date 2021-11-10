@@ -77,8 +77,9 @@ jobs:
           id: build
           with:
             pull: true
+            load: ${{ github.event_name == 'pull_request' }}
             push: ${{ github.event_name != 'pull_request' }}
-            platforms: ${{ env.BUILD_PLATFORMS }}
+            platforms: ${{ github.event_name != 'pull_request' && env.BUILD_PLATFORMS || '' }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
             cache-from: type=gha,scope=source
@@ -93,8 +94,9 @@ jobs:
           id: build-prebuilt
           with:
             pull: true
+            load: ${{ github.event_name == 'pull_request' }}
             push: ${{ github.event_name != 'pull_request' }}
-            platforms: ${{ env.PLATFORMS }}
+            platforms: ${{ github.event_name != 'pull_request' && env.PLATFORMS || '' }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
             cache-from: type=gha,scope=prebuilt
