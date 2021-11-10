@@ -48,6 +48,6 @@ RUN --mount=type=bind,from=rpm-build,source=/nginx,target=/tmp/ \
     && useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
     && dnf install -y /tmp/*.rpm \
     && dnf -q repoquery --resolve --requires --recursive --whatrequires nginx --queryformat "%{NAME}" > nginx \
-    && microdnf remove $(comm -13 installed new | comm -13 nginx -) \
-    && microdnf clean all \
+    && microdnf -y remove $(comm -13 installed new | comm -13 nginx -) \
+    && microdnf -y clean all \
     && rm installed new nginx
