@@ -78,7 +78,6 @@ jobs:
           with:
             pull: true
             push: ${{ github.event_name != 'pull_request' }}
-            load: ${{ github.event_name == 'pull_request' }}
             platforms: ${{ env.BUILD_PLATFORMS }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
@@ -95,7 +94,6 @@ jobs:
           with:
             pull: true
             push: ${{ github.event_name != 'pull_request' }}
-            load: ${{ github.event_name == 'pull_request' }}
             platforms: ${{ env.PLATFORMS }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
