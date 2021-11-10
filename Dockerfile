@@ -42,12 +42,12 @@ ENV NJS_VERSION ${NJS}
 
 RUN --mount=type=bind,from=rpm-build,source=/nginx,target=/tmp/ \
     rpm -qa --queryformat "%{NAME}\n" | sort > installed \
-    && microdnf --nodocs install -y shadow-utils diffutils dnf \
+    && microdnf --nodocs --setopt=install_weak_deps=0 install -y shadow-utils diffutils dnf \
     && rpm -qa --queryformat "%{NAME}\n" | sort > new \
     && groupadd --system --gid 101 nginx \
     && useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
     && dnf install -y /tmp/*.rpm \
     && dnf -q repoquery --resolve --requires --recursive --whatrequires nginx --queryformat "%{NAME}" > nginx \
-    && microdnf -y remove $(comm -13 installed new | comm -13 nginx -) \
+    && dnf --setopt=protected_packages= remove -y $(comm -13 installed new | comm -13 nginx -) \
     && microdnf -y clean all \
     && rm installed new nginx
