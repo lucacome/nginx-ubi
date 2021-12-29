@@ -17,15 +17,15 @@ env:
   PLATFORMS: "linux/amd64,linux/arm64"
   BUILD_PLATFORMS: "linux/ppc64le,linux/s390x"
 
+concurrency:
+  group: ${{ github.ref_name }}-ci
+  cancel-in-progress: true
+
 jobs:
     build-docker:
       name: Build Docker Image
       runs-on: ubuntu-20.04
       steps:
-        - name: Cancel Previous Runs
-          uses: styfle/cancel-workflow-action@0.9.1
-          with:
-            access_token: ${{ secrets.GITHUB_TOKEN }}
         - name: Checkout Repository
           uses: actions/checkout@v2
 
