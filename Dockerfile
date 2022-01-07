@@ -13,20 +13,12 @@ RUN rpm --import https://nginx.org/keys/nginx_signing.key \
     "gpgcheck=1" "enabled=1" "module_hotfixes=true" >> /etc/yum.repos.d/nginx.repo \
     && dnf install rpm-build gcc make dnf-plugins-core which -y \
     && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
-    && if [[ "$(arch)" != "s390x" ]]; then \
-    printf "%s\n" "[powertools]" \
+    && printf "%s\n" "[powertools]" \
     "name=CentOS Linux \$releasever - PowerTools" \
     "mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra" \
     "#baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/" \
     "gpgcheck=0" \
-    "enabled=1" > /etc/yum.repos.d/CentOS-Linux-PowerTools.repo; \
-    else \
-    curl -O https://vault.centos.org/8.5.2111/BaseOS/Source/SPackages/libedit-3.1-23.20170329cvs.el8.src.rpm \
-    && dnf builddep -y --srpm libedit-3.1-23.20170329cvs.el8.src.rpm \
-    && rpmbuild --rebuild --nodebuginfo libedit-3.1-23.20170329cvs.el8.src.rpm \
-    && dnf install -y /root/rpmbuild/RPMS/s390x/* \
-    && rm -f /root/rpmbuild/RPMS/s390x/*;\
-    fi
+    "enabled=1" > /etc/yum.repos.d/CentOS-Linux-PowerTools.repo;
 
 RUN nginxPackages=" \
     nginx-${NGINX_VERSION} \
