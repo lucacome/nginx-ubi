@@ -33,6 +33,7 @@ jobs:
           id: var
           run: |
             nginx_v=$(grep -m1 'FROM nginx:' <Dockerfile | awk -F'[: ]' '{print $3}')
+            docker pull nginx:$nginx_v || exit 1
             njs=$(docker run nginx:$nginx_v env | grep NJS_VERSION | cut -d= -f2)
             echo "NJS_VERSION=$njs"
             echo "::set-output name=nginx_version::$nginx_v"
