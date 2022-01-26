@@ -1,4 +1,4 @@
-FROM nginx:1.21.5 as nginx
+FROM nginx:1.21.6 as nginx
 
 FROM redhat/ubi8:8.5 as rpm-build
 ARG NGINX
