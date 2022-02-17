@@ -12,13 +12,7 @@ RUN rpm --import https://nginx.org/keys/nginx_signing.key \
     "baseurl=https://nginx.org/packages/mainline/centos/8/SRPMS" \
     "gpgcheck=1" "enabled=1" "module_hotfixes=true" >> /etc/yum.repos.d/nginx.repo \
     && dnf install rpm-build gcc make dnf-plugins-core which -y \
-    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
-    && printf "%s\n" "[powertools]" \
-    "name=CentOS Linux \$releasever - PowerTools" \
-    "mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra" \
-    "#baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/" \
-    "gpgcheck=0" \
-    "enabled=1" > /etc/yum.repos.d/CentOS-Linux-PowerTools.repo;
+    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
 RUN nginxPackages=" \
     nginx-${NGINX_VERSION} \
