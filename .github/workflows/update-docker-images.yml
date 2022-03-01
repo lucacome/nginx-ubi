@@ -19,7 +19,7 @@ jobs:
       nginx_version: ${{ steps.version.outputs.nginx_version }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set Base image version
         id: version
         run: |
