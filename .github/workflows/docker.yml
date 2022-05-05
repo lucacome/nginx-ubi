@@ -40,7 +40,7 @@ jobs:
             echo "::set-output name=njs_version::$njs"
 
         - name: Setup QEMU
-          uses: docker/setup-qemu-action@v1
+          uses: docker/setup-qemu-action@v2
           with:
             platforms: arm,arm64,ppc64le,s390x
           if: github.event_name != 'pull_request'
