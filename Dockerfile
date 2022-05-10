@@ -1,6 +1,6 @@
 FROM nginx:1.21.6 as nginx
 
-FROM redhat/ubi8:8.5 as rpm-build
+FROM redhat/ubi8:8.6 as rpm-build
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION ${NGINX}
