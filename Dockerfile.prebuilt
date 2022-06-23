@@ -10,7 +10,7 @@ RUN  rpm -qa --queryformat "%{NAME}\n" | sort > installed \
     && groupadd --system --gid 101 nginx \
     && useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
     && rpm -qa --queryformat "%{NAME}\n" | sort > new \
-    && microdnf remove $(comm -13 installed new) \
+    && microdnf remove -y $(comm -13 installed new) \
     # prebuilt nginx rpm
     && rpm --import https://nginx.org/keys/nginx_signing.key \
     &&  printf "%s\n" "[nginx]" "name=nginx repo" \
