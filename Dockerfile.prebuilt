@@ -1,4 +1,5 @@
-FROM redhat/ubi8-minimal:8.6 as final
+# syntax=docker/dockerfile:1.4
+FROM redhat/ubi9-minimal:9.0.0 as final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION ${NGINX}
@@ -9,11 +10,11 @@ RUN  rpm -qa --queryformat "%{NAME}\n" | sort > installed \
     && groupadd --system --gid 101 nginx \
     && useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
     && rpm -qa --queryformat "%{NAME}\n" | sort > new \
-    && microdnf remove $(comm -13 installed new) \
+    && microdnf remove -y $(comm -13 installed new) \
     # prebuilt nginx rpm
     && rpm --import https://nginx.org/keys/nginx_signing.key \
     &&  printf "%s\n" "[nginx]" "name=nginx repo" \
-    "baseurl=https://nginx.org/packages/mainline/centos/8/\$basearch/" \
+    "baseurl=https://nginx.org/packages/mainline/centos/9/\$basearch/" \
     "gpgcheck=1" "enabled=1" "module_hotfixes=true" > /etc/yum.repos.d/nginx.repo \
     && nginxPackages=" \
     nginx-${NGINX_VERSION} \
