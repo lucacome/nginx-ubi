@@ -118,6 +118,11 @@ jobs:
           run: |
             docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
             docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx-ubi:latest
+            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:latest-ubi
+            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:${{ steps.meta.outputs.version }}-ubi
+
             docker buildx imagetools create ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
             docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx-ubi:latest
+            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:latest-ubi
+            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:${{ steps.meta.outputs.version }}-ubi
           if: github.event_name != 'pull_request'
