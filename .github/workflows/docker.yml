@@ -31,7 +31,7 @@ jobs:
       runs-on: ubuntu-20.04
       steps:
         - name: Checkout Repository
-          uses: actions/checkout@v3
+          uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
 
         - name: Output Variables
           id: var
@@ -44,25 +44,25 @@ jobs:
             echo "::set-output name=njs_version::$njs"
 
         - name: Setup QEMU
-          uses: docker/setup-qemu-action@v2
+          uses: docker/setup-qemu-action@8b122486cedac8393e77aa9734c3528886e4a1a8
           with:
             platforms: arm,arm64,ppc64le,s390x
           if: github.event_name != 'pull_request'
 
         - name: Docker Buildx
-          uses: docker/setup-buildx-action@v2
+          uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6
           with:
             buildkitd-flags: --debug
 
         - name: DockerHub Login
-          uses: docker/login-action@v2
+          uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
           with:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}
           if: github.event_name != 'pull_request'
 
         - name: Login to GitHub Container Registry
-          uses: docker/login-action@v2
+          uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
           with:
             registry: ghcr.io
             username: ${{ github.repository_owner }}
@@ -71,7 +71,7 @@ jobs:
 
         - name: Docker meta
           id: meta
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
           with:
             images: |
               nginxcontrib/nginx-ubi
@@ -80,7 +80,7 @@ jobs:
               type=raw,value=${{ steps.var.outputs.nginx_version }}
 
         - name: Build from source
-          uses: docker/build-push-action@v3
+          uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
           id: build
           with:
             pull: true
@@ -97,7 +97,7 @@ jobs:
               NJS=${{ steps.var.outputs.njs_version }}
 
         - name: Build prebuilt
-          uses: docker/build-push-action@v3
+          uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
           id: build-prebuilt
           with:
             pull: true
