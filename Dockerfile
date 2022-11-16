@@ -29,7 +29,7 @@ RUN nginxPackages=" \
     && cp /root/rpmbuild/RPMS/$(arch)/* /nginx/
 
 
-FROM redhat/ubi9-minimal:9.0.0 as final
+FROM redhat/ubi9-minimal:9.1.0 as final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION ${NGINX}
