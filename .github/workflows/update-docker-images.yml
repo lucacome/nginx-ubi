@@ -19,7 +19,7 @@ jobs:
       nginx_version: ${{ steps.version.outputs.nginx_version }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
       - name: Set Base image version
         id: version
         run: |
@@ -35,12 +35,12 @@ jobs:
     steps:
       - name: Check if update available
         id: update
-        uses: lucacome/docker-image-update-checker@v1
+        uses: lucacome/docker-image-update-checker@93aeebde51b01e63284197bae89f9a1d6dd1921f # v1.1.1
         with:
           base-image: ${{ needs.variables.outputs.ubi_version }}
           image: nginxcontrib/nginx-ubi:${{ needs.variables.outputs.nginx_version }}
       - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@f2696244ec00ed5c659a5cc77f7138ad0302dffb # v2.1.0
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: update
