@@ -92,8 +92,8 @@ jobs:
             cache-from: type=gha,scope=source
             cache-to: type=gha,scope=source,mode=max
             target: final
-            provenance: true
-            sbom: true
+            provenance: ${{ github.event_name != 'pull_request' }}
+            sbom: ${{ github.event_name != 'pull_request' }}
             build-args: |
               NGINX=${{ steps.var.outputs.nginx_version }}
               NJS=${{ steps.var.outputs.njs_version }}
@@ -112,8 +112,8 @@ jobs:
             cache-to: type=gha,scope=prebuilt,mode=max
             target: final
             file: Dockerfile.prebuilt
-            provenance: true
-            sbom: true
+            provenance: ${{ github.event_name != 'pull_request' }}
+            sbom: ${{ github.event_name != 'pull_request' }}
             build-args: |
               NGINX=${{ steps.var.outputs.nginx_version }}
               NJS=${{ steps.var.outputs.njs_version }}
