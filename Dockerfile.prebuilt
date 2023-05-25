@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1.4
-FROM redhat/ubi9-minimal:9.1.0 as final
+# syntax=docker/dockerfile:1.5
+FROM redhat/ubi9-minimal:9.2 as final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION ${NGINX}
