@@ -40,8 +40,8 @@ jobs:
             docker pull nginx:$nginx_v || exit 1
             njs=$(docker run nginx:$nginx_v env | grep NJS_VERSION | cut -d= -f2)
             echo "NJS_VERSION=$njs"
-            echo "::set-output name=nginx_version::$nginx_v"
-            echo "::set-output name=njs_version::$njs"
+            echo "nginx_version=${nginx_v}" >> $GITHUB_OUTPUT
+            echo "njs_version=${njs}" >> $GITHUB_OUTPUT
 
         - name: Setup QEMU
           uses: docker/setup-qemu-action@v3
