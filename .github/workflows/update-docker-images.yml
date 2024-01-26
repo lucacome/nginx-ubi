@@ -25,8 +25,8 @@ jobs:
         run: |
           ubi=$(grep "FROM redhat/ubi9-minimal" < Dockerfile | awk -F" " '{print $2}')
           nginx=$(grep -m1 "FROM nginx:" < Dockerfile | awk -F"[: ]" '{print $3}')
-          echo "::set-output name=ubi_version::$ubi"
-          echo "::set-output name=nginx_version::$nginx"
+          echo "ubi_version=${ubi}" >> $GITHUB_OUTPUT
+          echo "nginx_version=${nginx}" >> $GITHUB_OUTPUT
 
   check:
     name: Check if updates are needed
