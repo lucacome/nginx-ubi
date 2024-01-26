@@ -40,7 +40,7 @@ jobs:
           base-image: ${{ needs.variables.outputs.ubi_version }}
           image: nginxcontrib/nginx-ubi:${{ needs.variables.outputs.nginx_version }}
       - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: update
