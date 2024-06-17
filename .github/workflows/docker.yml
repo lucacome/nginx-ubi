@@ -80,7 +80,7 @@ jobs:
               type=raw,value=${{ steps.var.outputs.nginx_version }}
 
         - name: Build from source
-          uses: docker/build-push-action@v5
+          uses: docker/build-push-action@v6
           id: build
           with:
             pull: true
@@ -99,7 +99,7 @@ jobs:
               NJS=${{ steps.var.outputs.njs_version }}
 
         - name: Build prebuilt
-          uses: docker/build-push-action@v5
+          uses: docker/build-push-action@v6
           id: build-prebuilt
           with:
             pull: true
