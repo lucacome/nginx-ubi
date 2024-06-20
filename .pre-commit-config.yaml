@@ -15,3 +15,13 @@ repos:
     rev: v2.3.0
     hooks:
     -   id: codespell
+
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.18.4
+  hooks:
+    - id: gitleaks
+
+- repo: https://github.com/DavidAnson/markdownlint-cli2
+  rev: v0.13.0
+  hooks:
+    - id: markdownlint-cli2
