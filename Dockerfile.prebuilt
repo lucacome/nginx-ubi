@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.6
+# syntax=docker/dockerfile:1.8
 FROM redhat/ubi9-minimal:9.4 as final
 ARG NGINX
 ARG NJS
@@ -6,22 +6,22 @@ ENV NGINX_VERSION ${NGINX}
 ENV NJS_VERSION ${NJS}
 
 RUN  rpm -qa --queryformat "%{NAME}\n" | sort > installed \
-    && microdnf --nodocs install -y shadow-utils diffutils \
-    && groupadd --system --gid 101 nginx \
-    && useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
-    && rpm -qa --queryformat "%{NAME}\n" | sort > new \
-    && microdnf remove -y $(comm -13 installed new) \
-    # prebuilt nginx rpm
-    && rpm --import https://nginx.org/keys/nginx_signing.key \
-    &&  printf "%s\n" "[nginx]" "name=nginx repo" \
-    "baseurl=https://nginx.org/packages/mainline/centos/9/\$basearch/" \
-    "gpgcheck=1" "enabled=1" "module_hotfixes=true" > /etc/yum.repos.d/nginx.repo \
-    && nginxPackages=" \
-    nginx-${NGINX_VERSION} \
-    nginx-module-xslt-${NGINX_VERSION} \
-    nginx-module-image-filter-${NGINX_VERSION} \
-    nginx-module-njs-${NGINX_VERSION}+${NJS_VERSION} \
-    " \
-    && microdnf install -y ${nginxPackages} \
-    && rm /etc/yum.repos.d/nginx.repo \
-    && microdnf clean all
+	&& microdnf --nodocs install -y shadow-utils diffutils \
+	&& groupadd --system --gid 101 nginx \
+	&& useradd --system --gid nginx --no-create-home --home-dir /nonexistent --comment "nginx user" --shell /bin/false --uid 101 nginx \
+	&& rpm -qa --queryformat "%{NAME}\n" | sort > new \
+	&& microdnf remove -y $(comm -13 installed new) \
+	# prebuilt nginx rpm
+	&& rpm --import https://nginx.org/keys/nginx_signing.key \
+	&&  printf "%s\n" "[nginx]" "name=nginx repo" \
+	"baseurl=https://nginx.org/packages/mainline/centos/9/\$basearch/" \
+	"gpgcheck=1" "enabled=1" "module_hotfixes=true" > /etc/yum.repos.d/nginx.repo \
+	&& nginxPackages=" \
+	nginx-${NGINX_VERSION} \
+	nginx-module-xslt-${NGINX_VERSION} \
+	nginx-module-image-filter-${NGINX_VERSION} \
+	nginx-module-njs-${NGINX_VERSION}+${NJS_VERSION} \
+	" \
+	&& microdnf install -y ${nginxPackages} \
+	&& rm /etc/yum.repos.d/nginx.repo \
+	&& microdnf clean all
