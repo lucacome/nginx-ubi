@@ -5,11 +5,11 @@ on:
     branches:
       - main
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
     paths-ignore:
-      - '**.yml'
-      - '**.yaml'
-      - '**.md'
+      - "**.yml"
+      - "**.yaml"
+      - "**.md"
   pull_request:
     branches:
       - main
@@ -29,107 +29,107 @@ permissions:
   contents: read
 
 jobs:
-    build-docker:
-      name: Build Docker Image
-      runs-on: ubuntu-22.04
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-        - name: Output Variables
-          id: var
-          run: |
-            nginx_v=$(grep -m1 'FROM nginx:' <Dockerfile | awk -F'[: ]' '{print $3}')
-            docker pull nginx:$nginx_v || exit 1
-            njs=$(docker run nginx:$nginx_v env | grep NJS_VERSION | cut -d= -f2)
-            echo "NJS_VERSION=$njs"
-            echo "nginx_version=${nginx_v}" >> $GITHUB_OUTPUT
-            echo "njs_version=${njs}" >> $GITHUB_OUTPUT
+      - name: Output Variables
+        id: var
+        run: |
+          nginx_v=$(grep -m1 'FROM nginx:' <Dockerfile | awk -F'[: ]' '{print $3}')
+          docker pull nginx:$nginx_v || exit 1
+          njs=$(docker run nginx:$nginx_v env | grep NJS_VERSION | cut -d= -f2)
+          echo "NJS_VERSION=$njs"
+          echo "nginx_version=${nginx_v}" >> $GITHUB_OUTPUT
+          echo "njs_version=${njs}" >> $GITHUB_OUTPUT
 
-        - name: Setup QEMU
-          uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
-          with:
-            platforms: arm,arm64,ppc64le,s390x
-          if: github.event_name != 'pull_request'
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
+        with:
+          platforms: arm,arm64,ppc64le,s390x
+        if: github.event_name != 'pull_request'
 
-        - name: Docker Buildx
-          uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
-          with:
-            buildkitd-flags: --debug
+      - name: Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
+        with:
+          buildkitd-flags: --debug
 
-        - name: DockerHub Login
-          uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-          if: github.event_name != 'pull_request'
+      - name: DockerHub Login
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        if: github.event_name != 'pull_request'
 
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-          with:
-            registry: ghcr.io
-            username: ${{ github.repository_owner }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-          if: github.event_name != 'pull_request'
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name != 'pull_request'
 
-        - name: Docker meta
-          id: meta
-          uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-          with:
-            images: |
-              nginxcontrib/nginx-ubi
-              ghcr.io/lucacome/nginx-ubi
-            tags: |
-              type=raw,value=${{ steps.var.outputs.nginx_version }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
+        with:
+          images: |
+            nginxcontrib/nginx-ubi
+            ghcr.io/lucacome/nginx-ubi
+          tags: |
+            type=raw,value=${{ steps.var.outputs.nginx_version }}
 
-        - name: Build from source
-          uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
-          id: build
-          with:
-            pull: true
-            load: ${{ github.event_name == 'pull_request' }}
-            push: ${{ github.event_name != 'pull_request' }}
-            platforms: ${{ github.event_name != 'pull_request' && env.BUILD_PLATFORMS || '' }}
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
-            cache-from: type=gha,scope=source
-            cache-to: type=gha,scope=source,mode=max
-            target: final
-            provenance: ${{ github.event_name != 'pull_request' }}
-            sbom: ${{ github.event_name != 'pull_request' }}
-            build-args: |
-              NGINX=${{ steps.var.outputs.nginx_version }}
-              NJS=${{ steps.var.outputs.njs_version }}
+      - name: Build from source
+        uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
+        id: build
+        with:
+          pull: true
+          load: ${{ github.event_name == 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: ${{ github.event_name != 'pull_request' && env.BUILD_PLATFORMS || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=source
+          cache-to: type=gha,scope=source,mode=max
+          target: final
+          provenance: ${{ github.event_name != 'pull_request' }}
+          sbom: ${{ github.event_name != 'pull_request' }}
+          build-args: |
+            NGINX=${{ steps.var.outputs.nginx_version }}
+            NJS=${{ steps.var.outputs.njs_version }}
 
-        - name: Build prebuilt
-          uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
-          id: build-prebuilt
-          with:
-            pull: true
-            load: ${{ github.event_name == 'pull_request' }}
-            push: ${{ github.event_name != 'pull_request' }}
-            platforms: ${{ github.event_name != 'pull_request' && env.PLATFORMS || '' }}
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
-            cache-from: type=gha,scope=prebuilt
-            cache-to: type=gha,scope=prebuilt,mode=max
-            target: final
-            file: Dockerfile.prebuilt
-            provenance: ${{ github.event_name != 'pull_request' }}
-            sbom: ${{ github.event_name != 'pull_request' }}
-            build-args: |
-              NGINX=${{ steps.var.outputs.nginx_version }}
-              NJS=${{ steps.var.outputs.njs_version }}
+      - name: Build prebuilt
+        uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
+        id: build-prebuilt
+        with:
+          pull: true
+          load: ${{ github.event_name == 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: ${{ github.event_name != 'pull_request' && env.PLATFORMS || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=prebuilt
+          cache-to: type=gha,scope=prebuilt,mode=max
+          target: final
+          file: Dockerfile.prebuilt
+          provenance: ${{ github.event_name != 'pull_request' }}
+          sbom: ${{ github.event_name != 'pull_request' }}
+          build-args: |
+            NGINX=${{ steps.var.outputs.nginx_version }}
+            NJS=${{ steps.var.outputs.njs_version }}
 
-        - name: Combine images
-          run: |
-            docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
-            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx-ubi:latest
-            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:latest-ubi
-            docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:${{ steps.meta.outputs.version }}-ubi
+      - name: Combine images
+        run: |
+          docker buildx imagetools create nginxcontrib/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
+          docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx-ubi:latest
+          docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:latest-ubi
+          docker buildx imagetools create nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }} --tag nginxcontrib/nginx:${{ steps.meta.outputs.version }}-ubi
 
-            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
-            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx-ubi:latest
-            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:latest-ubi
-            docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:${{ steps.meta.outputs.version }}-ubi
-          if: github.event_name != 'pull_request'
+          docker buildx imagetools create ghcr.io/lucacome/nginx-ubi@${{ steps.build.outputs.digest }} ${{ steps.build-prebuilt.outputs.digest }} --tag ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }}
+          docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx-ubi:latest
+          docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:latest-ubi
+          docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:${{ steps.meta.outputs.version }}-ubi
+        if: github.event_name != 'pull_request'

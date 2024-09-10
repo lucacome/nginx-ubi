@@ -2,7 +2,7 @@ name: Update Docker Images
 
 on:
   schedule:
-    - cron:  '0 1 * * *'
+    - cron: "0 1 * * *"
   workflow_dispatch:
 
 defaults:
@@ -10,7 +10,6 @@ defaults:
     shell: bash
 
 jobs:
-
   variables:
     name: Get version of base image
     runs-on: ubuntu-22.04
