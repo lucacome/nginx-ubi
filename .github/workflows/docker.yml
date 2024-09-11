@@ -32,6 +32,10 @@ jobs:
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      security-events: write
+      packages: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -95,7 +99,7 @@ jobs:
           cache-from: type=gha,scope=source
           cache-to: type=gha,scope=source,mode=max
           target: final
-          provenance: ${{ github.event_name != 'pull_request' }}
+          provenance: ${{ github.event_name != 'pull_request' && 'mode=max' || 'false' }}
           sbom: ${{ github.event_name != 'pull_request' }}
           build-args: |
             NGINX=${{ steps.var.outputs.nginx_version }}
@@ -133,3 +137,18 @@ jobs:
           docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:latest-ubi
           docker buildx imagetools create ghcr.io/lucacome/nginx-ubi:${{ steps.meta.outputs.version }} --tag ghcr.io/lucacome/nginx:${{ steps.meta.outputs.version }}-ubi
         if: github.event_name != 'pull_request'
+
+      - name: Scan image
+        uses: anchore/scan-action@64a33b277ea7a1215a3c142735a1091341939ff5 # v4.1.2
+        id: scan
+        continue-on-error: true
+        with:
+          image: nginxcontrib/nginx-ubi:${{ steps.meta.outputs.version }}
+          only-fixed: true
+          add-cpes-if-none: true
+
+      - name: Upload scan result to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@4dd16135b69a43b6c8efb853346f8437d92d3c93 # v3.26.6
+        continue-on-error: true
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
