@@ -41,3 +41,6 @@ repos:
     rev: v1.35.1
     hooks:
       - id: yamllint
+
+ci:
+  autoupdate_schedule: quarterly # We use renovate for more frequent updates and there's no way to disable autoupdate
