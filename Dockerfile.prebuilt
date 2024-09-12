@@ -2,8 +2,8 @@
 FROM redhat/ubi9-minimal:9.4 AS final
 ARG NGINX
 ARG NJS
-ENV NGINX_VERSION ${NGINX}
-ENV NJS_VERSION ${NJS}
+ENV NGINX_VERSION=${NGINX}
+ENV NJS_VERSION=${NJS}
 
 RUN  rpm -qa --queryformat "%{NAME}\n" | sort > installed \
 	&& microdnf --nodocs install -y shadow-utils diffutils \

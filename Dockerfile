@@ -4,8 +4,8 @@ FROM nginx:1.27.1 AS nginx
 FROM redhat/ubi9:9.4 AS rpm-build
 ARG NGINX
 ARG NJS
-ENV NGINX_VERSION ${NGINX}
-ENV NJS_VERSION ${NJS}
+ENV NGINX_VERSION=${NGINX}
+ENV NJS_VERSION=${NJS}
 
 
 RUN rpm --import https://nginx.org/keys/nginx_signing.key \
