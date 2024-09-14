@@ -28,7 +28,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.4
+    rev: v8.19.1
     hooks:
       - id: gitleaks
 
