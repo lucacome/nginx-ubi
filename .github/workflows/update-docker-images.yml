@@ -12,7 +12,7 @@ defaults:
 jobs:
   variables:
     name: Get version of base image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       ubi_version: ${{ steps.version.outputs.ubi_version }}
       nginx_version: ${{ steps.version.outputs.nginx_version }}
@@ -29,7 +29,7 @@ jobs:
 
   check:
     name: Check if updates are needed
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: variables
     steps:
       - name: Check if update available
