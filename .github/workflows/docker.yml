@@ -139,7 +139,7 @@ jobs:
         if: github.event_name != 'pull_request'
 
       - name: Scan image
-        uses: anchore/scan-action@ef0b0b023552a0c077534074723a9915280284bb # v5.1.0
+        uses: anchore/scan-action@5ed195cc06065322983cae4bb31e2a751feb86fd # v5.2.0
         id: scan
         continue-on-error: true
         with:
