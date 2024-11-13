@@ -22,7 +22,6 @@ RUN nginxPackages=" \
 	nginx-module-njs-${NGINX_VERSION}+${NJS_VERSION} \
 	" \
     && /usr/bin/crb enable \
-	&& dnf config-manager --set-enabled ubi-9-codeready-builder \
 	&& dnf download --source ${nginxPackages} \
 	&& dnf builddep -y --srpm nginx*.rpm \
 	&& rpmbuild --rebuild --nodebuginfo nginx*.rpm \
