@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.11
 FROM nginx:1.27.1 AS nginx
 
-FROM redhat/ubi9:9.4 AS rpm-build
+FROM redhat/ubi9:9.5 AS rpm-build
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
@@ -21,7 +21,7 @@ RUN nginxPackages=" \
 	nginx-module-image-filter-${NGINX_VERSION} \
 	nginx-module-njs-${NGINX_VERSION}+${NJS_VERSION} \
 	" \
-	&& dnf config-manager --set-enabled ubi-9-codeready-builder \
+    && /usr/bin/crb enable \
 	&& dnf download --source ${nginxPackages} \
 	&& dnf builddep -y --srpm nginx*.rpm \
 	&& rpmbuild --rebuild --nodebuginfo nginx*.rpm \
