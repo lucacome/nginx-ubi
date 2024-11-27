@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.11
+# syntax=docker/dockerfile:1.12
 FROM nginx:1.27.1 AS nginx
 
 FROM redhat/ubi9:9.5 AS rpm-build
