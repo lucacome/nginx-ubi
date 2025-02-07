@@ -32,8 +32,8 @@ RUN nginxPackages=" \
 FROM redhat/ubi9-minimal:9.5 AS final
 ARG NGINX
 ARG NJS
-ENV NGINX_VERSION ${NGINX}
-ENV NJS_VERSION ${NJS}
+ENV NGINX_VERSION=${NGINX}
+ENV NJS_VERSION=${NJS}
 
 RUN --mount=type=bind,from=rpm-build,source=/nginx,target=/tmp/ \
 	rpm -qa --queryformat "%{NAME}\n" | sort > installed \
