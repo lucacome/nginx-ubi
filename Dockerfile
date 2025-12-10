@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.20
-FROM nginx:1.29.3 AS nginx
+FROM nginx:1.29.4 AS nginx
 
 FROM redhat/ubi9:9.7-1764794285 AS rpm-build
 ARG NGINX
