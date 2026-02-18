@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.21
 FROM nginx:1.29.5 AS nginx
 
-FROM redhat/ubi9:9.7-1770238273 AS rpm-build
+FROM redhat/ubi9:9.7-1771346757 AS rpm-build
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
