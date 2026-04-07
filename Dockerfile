@@ -44,7 +44,6 @@ RUN --mount=type=bind,from=rpm-build,source=/nginx,target=/tmp/ \
     && dnf install -y /tmp/*.rpm \
     && dnf -q repoquery --resolve --requires --recursive --whatrequires nginx --queryformat "%{NAME}" > nginx \
     && dnf --setopt=protected_packages= remove -y $(comm -13 installed new | comm -13 nginx -) \
-    && dnf -y clean all \
     && rm -rf /var/cache/dnf \
     && microdnf -y clean all \
     && rm installed new nginx
