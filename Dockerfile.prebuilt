@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.24
+# syntax=docker/dockerfile:1.25
 FROM redhat/ubi9-minimal:9.8 AS final
 ARG NGINX
 ARG NJS
