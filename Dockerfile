@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.25
 FROM nginx:1.31.2 AS nginx
 
-FROM redhat/ubi9:9.8-1779808651 AS rpm-build
+FROM redhat/ubi9:9.8 AS rpm-build
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
@@ -29,7 +29,7 @@ RUN nginxPackages=" \
     && cp /root/rpmbuild/RPMS/$(arch)/* /nginx/
 
 
-FROM redhat/ubi9-minimal:9.8-1781496742 AS final
+FROM redhat/ubi9-minimal:9.8 AS final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
