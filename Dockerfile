@@ -13,7 +13,7 @@ RUN rpm --import https://nginx.org/keys/nginx_signing.key \
     "baseurl=https://nginx.org/packages/mainline/centos/9/SRPMS" \
     "gpgcheck=1" "enabled=1" "module_hotfixes=true" >> /etc/yum.repos.d/nginx.repo \
     && dnf install rpm-build gcc make dnf-plugins-core which -y \
-    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
 
 RUN nginxPackages=" \
     nginx-${NGINX_VERSION} \
