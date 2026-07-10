@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.25
-FROM redhat/ubi9-minimal:9.8 AS final
+FROM redhat/ubi10-minimal:10.2 AS final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
@@ -14,7 +14,7 @@ RUN  rpm -qa --queryformat "%{NAME}\n" | sort > installed \
     # prebuilt nginx rpm
     && rpm --import https://nginx.org/keys/nginx_signing.key \
     &&  printf "%s\n" "[nginx]" "name=nginx repo" \
-    "baseurl=https://nginx.org/packages/mainline/centos/9/\$basearch/" \
+    "baseurl=https://nginx.org/packages/mainline/centos/10/\$basearch/" \
     "gpgcheck=1" "enabled=1" "module_hotfixes=true" > /etc/yum.repos.d/nginx.repo \
     && nginxPackages=" \
     nginx-${NGINX_VERSION} \

@@ -14,6 +14,6 @@ This repository contains the Dockerfiles for building a Red Hat Universal Base i
 
 Currently supported linux architectures: `amd64`, `arm64`, `ppc64le`, `s390x`.
 
-Base image: `redhat/ubi9-minimal`.
+Base image: `redhat/ubi10-minimal`.
 
 NGINX modules installed: `nginx-module-xslt`, `nginx-module-image-filter` and `nginx-module-njs`.

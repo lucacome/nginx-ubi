@@ -22,7 +22,7 @@ jobs:
       - name: Set Base image version
         id: version
         run: |
-          ubi=$(grep "FROM redhat/ubi9-minimal" < Dockerfile | awk -F" " '{print $2}')
+          ubi=$(grep "FROM redhat/ubi10-minimal" < Dockerfile | awk -F" " '{print $2}')
           nginx=$(grep -m1 "FROM nginx:" < Dockerfile | awk -F"[: ]" '{print $3}')
           echo "ubi_version=${ubi}" >> "$GITHUB_OUTPUT"
           echo "nginx_version=${nginx}" >> "$GITHUB_OUTPUT"

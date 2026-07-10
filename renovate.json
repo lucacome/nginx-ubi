@@ -2,5 +2,16 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>lucacome/common"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "redhat/ubi10*"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false
+    }
   ]
 }
