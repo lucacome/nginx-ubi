@@ -1,5 +1,6 @@
 [tools]
 "aqua:owenlamont/ryl" = "0.22.0"
+"github:immanuwell/dockerfile-roast" = "1.7.0"
 "pipx:codespell" = "2.4.3"
 actionlint = "1.7.12"
 editorconfig-checker = "4.0.1"

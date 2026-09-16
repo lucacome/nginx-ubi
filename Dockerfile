@@ -36,7 +36,8 @@ ENV NGINX_VERSION=${NGINX}
 ENV NJS_VERSION=${NJS}
 
 RUN --mount=type=bind,from=rpm-build,source=/nginx,target=/tmp/ \
-    rpm -qa --queryformat "%{NAME}\n" | sort > installed \
+    set -o pipefail \
+    && rpm -qa --queryformat "%{NAME}\n" | sort > installed \
     && microdnf --nodocs --setopt=install_weak_deps=0 install -y shadow-utils diffutils dnf \
     && rpm -qa --queryformat "%{NAME}\n" | sort > new \
     && groupadd --system --gid 101 nginx \
