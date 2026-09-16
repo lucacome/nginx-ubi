@@ -1,12 +1,12 @@
 [tools]
-hk = "2.0.1"
-pkl = "0.32.1"
-actionlint = "1.7.12"
-yamllint = "1.38.0"
-markdownlint-cli2 = "0.23.2"
-gitleaks = "8.30.1"
-editorconfig-checker = "3.11.3"
+"aqua:owenlamont/ryl" = "0.22.0"
 "pipx:codespell" = "2.4.3"
+actionlint = "1.7.12"
+editorconfig-checker = "4.0.1"
+gitleaks = "8.30.1"
+hk = "2.0.1"
+markdownlint-cli2 = "0.23.2"
+pkl = "0.32.1"
 
 [tasks.lint]
 alias = "l"
