@@ -1,16 +1,20 @@
-amends "package://github.com/jdx/hk/releases/download/v1.50.0/hk@1.50.0#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v1.50.0/hk@1.50.0#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
-  ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["actionlint"] = Builtins.actionlint
+  ["check-case-conflict"] = Builtins.check_case_conflict
+  ["check-json"] = Builtins.jq
+  ["editorconfig-checker"] = Builtins.editorconfig_checker
+  ["check-symlinks"] = Builtins.check_symlinks
+  ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["end-of-file-fixer"] = Builtins.newlines
   ["fix-smart-quotes"] = Builtins.fix_smart_quotes
   ["mixed-line-ending"] = Builtins.mixed_line_ending
-  ["check-json"] = Builtins.jq
   ["pkl-lint"] = Builtins.pkl_format
-  ["yamllint"] = Builtins.yamllint
-  ["actionlint"] = Builtins.actionlint
+  ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["yamllint"] = Builtins.ryl
   ["markdownlint"] {
     glob = List("**/*.md")
     check = "markdownlint-cli2 {{files}}"
@@ -26,19 +30,10 @@ local linters = new Mapping<String, Step> {
 
 local precommit = new Mapping<String, Step> {
   ["detect-private-key"] = Builtins.detect_private_key
-  ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
-  ["check-symlinks"] = Builtins.check_symlinks
   ["check-added-large-files"] = Builtins.check_added_large_files
   ["check-merge-conflict"] = Builtins.check_merge_conflict
   ["no-commit-to-branch"] = Builtins.no_commit_to_branch
-  ["gitleaks"] {
-    check = "gitleaks git --pre-commit --redact --staged --verbose --no-banner"
-  }
-}
-
-local checkers = new Mapping<String, Step> {
-  ["check-case-conflict"] = Builtins.check_case_conflict
-  ["editorconfig-checker"] = Builtins.editorconfig_checker
+  ["betterleaks"] = Builtins.betterleaks
 }
 
 hooks {
@@ -48,9 +43,6 @@ hooks {
     steps {
       ["linters"] = new Group {
         steps = linters
-      }
-      ["checkers"] = new Group {
-        steps = checkers
       }
       ["postlint"] {
         check = "mise run postlint"
@@ -63,12 +55,7 @@ hooks {
   }
   ["check"] {
     steps {
-      ["linters"] = new Group {
-        steps = linters
-      }
-      ["checkers"] = new Group {
-        steps = checkers
-      }
+      ...linters
     }
   }
   ["fix"] {
