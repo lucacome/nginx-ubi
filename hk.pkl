@@ -1,6 +1,6 @@
-amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.1.0/hk@2.1.0#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.1.0/hk@2.1.0#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
   ["actionlint"] = Builtins.actionlint
@@ -12,9 +12,11 @@ local linters = new Mapping<String, Step> {
   ["editorconfig-checker"] = Builtins.editorconfig_checker
   ["end-of-file-fixer"] = Builtins.newlines
   ["fix-smart-quotes"] = Builtins.fix_smart_quotes
+  ["mise"] = Builtins.mise
   ["mixed-line-ending"] = Builtins.mixed_line_ending
   ["pkl-lint"] = Builtins.pkl_format
   ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["typos"] = Builtins.typos
   ["yamllint"] = Builtins.ryl
   ["markdownlint"] {
     glob = List("**/*.md")
@@ -30,11 +32,11 @@ local linters = new Mapping<String, Step> {
 }
 
 local precommit = new Mapping<String, Step> {
-  ["detect-private-key"] = Builtins.detect_private_key
+  ["betterleaks"] = Builtins.betterleaks
   ["check-added-large-files"] = Builtins.check_added_large_files
   ["check-merge-conflict"] = Builtins.check_merge_conflict
+  ["detect-private-key"] = Builtins.detect_private_key
   ["no-commit-to-branch"] = Builtins.no_commit_to_branch
-  ["betterleaks"] = Builtins.betterleaks
 }
 
 hooks {
