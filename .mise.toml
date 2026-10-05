@@ -1,5 +1,5 @@
 [tools]
-"aqua:owenlamont/ryl" = "0.23.0"
+"aqua:owenlamont/ryl" = "0.24.0"
 "github:immanuwell/dockerfile-roast" = "1.7.0"
 "github:kjanat/actionlint" = "1.17.0"
 "pipx:codespell" = "2.4.3"
