@@ -8,7 +8,7 @@ on:
       - .github/workflows/dockerhub-description.yml
 
 concurrency:
-  group: ${{ github.ref_name }}-dockerhub
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -17,8 +17,11 @@ permissions:
 jobs:
   dockerHubDescription:
     runs-on: ubuntu-26.04
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v5.0.0

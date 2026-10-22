@@ -5,13 +5,13 @@
   ],
   "packageRules": [
     {
+      "enabled": false,
       "matchPackageNames": [
         "redhat/ubi10*"
       ],
       "matchUpdateTypes": [
         "patch"
-      ],
-      "enabled": false
+      ]
     }
   ]
 }

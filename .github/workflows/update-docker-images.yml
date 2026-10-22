@@ -3,22 +3,32 @@ name: Update Docker Images
 on:
   schedule:
     - cron: "0 1 * * *"
-  workflow_dispatch:
+  workflow_dispatch:  # yamllint disable-line rule:empty-values
 
 defaults:
   run:
     shell: bash
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   variables:
     name: Get version of base image
     runs-on: ubuntu-26.04
+    timeout-minutes: 10
     outputs:
       ubi_version: ${{ steps.version.outputs.ubi_version }}
       nginx_version: ${{ steps.version.outputs.nginx_version }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - name: Set Base image version
         id: version
         run: |
@@ -30,6 +40,7 @@ jobs:
   check:
     name: Check if updates are needed
     runs-on: ubuntu-26.04
+    timeout-minutes: 10
     needs: variables
     steps:
       - name: Check if update available
