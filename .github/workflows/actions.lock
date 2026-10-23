@@ -23,7 +23,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'davidanson/markdownlint-cli2-action@v24.2.0'
         - 'jdx/mise-action@v5.2.2'
-        - 'reviewdog/action-actionlint@v1.80.5'
+        - 'reviewdog/action-actionlint@v1.80.6'
     '.github/workflows/scorecards.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/upload-artifact@v7.0.2'
@@ -114,8 +114,8 @@ dependencies:
         commit: 'sha1-28959ce8df70de7be546dd1250a005dd32156697'
         owner_id: 18365890
         repo_id: 220359305
-    'reviewdog/action-actionlint@v1.80.5':
-        ref: 'v1.80.5'
-        commit: 'sha1-8bacd0b6ac20de8f143bda009d7c86f263c06bd1'
+    'reviewdog/action-actionlint@v1.80.6':
+        ref: 'v1.80.6'
+        commit: 'sha1-48e36f54d8da326b83ab061aee2cc5e01b5ca46f'
         owner_id: 48765237
         repo_id: 385059686
