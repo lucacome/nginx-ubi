@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.28
 FROM nginx:1.31.8 AS nginx
 
-FROM redhat/ubi10:10.2 AS rpm-build
+FROM redhat/ubi10:10.3 AS rpm-build
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
@@ -11,9 +11,11 @@ ENV NJS_VERSION=${NJS}
 RUN rpm --import https://nginx.org/keys/nginx_signing.key \
     && printf "%s\n" "[nginx]" "name=nginx src repo" \
     "baseurl=https://nginx.org/packages/mainline/centos/10/SRPMS" \
-    "gpgcheck=1" "enabled=1" "module_hotfixes=true" >> /etc/yum.repos.d/nginx.repo \
-    && dnf install rpm-build gcc make dnf-plugins-core which -y \
-    && dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
+    "gpgcheck=1" "enabled=1" "module_hotfixes=true" >> /etc/yum.repos.d/nginx.repo
+
+RUN dnf -y install rpm-build gcc make dnf-plugins-core which
+
+RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
 
 RUN nginxPackages=" \
     nginx-${NGINX_VERSION} \
@@ -29,7 +31,7 @@ RUN nginxPackages=" \
     && cp /root/rpmbuild/RPMS/$(arch)/* /nginx/
 
 
-FROM redhat/ubi10-minimal:10.3-1793834883 AS final
+FROM redhat/ubi10-minimal:10.3 AS final
 ARG NGINX
 ARG NJS
 ENV NGINX_VERSION=${NGINX}
