@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
 
       - name: Mise
-        uses: jdx/mise-action@v5.2.8
+        uses: jdx/mise-action@v5.2.9
 
       - name: Run lint
         run: |
