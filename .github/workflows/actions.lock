@@ -22,7 +22,7 @@ workflows:
     '.github/workflows/lint.yml':
         - 'actions/checkout@v7.0.1'
         - 'davidanson/markdownlint-cli2-action@v25.1.0'
-        - 'jdx/jactionlint@v2.6.0'
+        - 'jdx/jactionlint@v2.7.0'
         - 'jdx/mise-action@v5.3.0'
     '.github/workflows/scorecards.yml':
         - 'actions/checkout@v7.0.1'
@@ -94,9 +94,9 @@ dependencies:
         commit: 'sha1-915412ff23e8b7659517e607487dbeae018f2934'
         owner_id: 9919
         repo_id: 259445878
-    'jdx/jactionlint@v2.6.0':
-        ref: 'v2.6.0'
-        commit: 'sha1-72c00452809bcca05b8bc12acdcf15dd7a9c1c5e'
+    'jdx/jactionlint@v2.7.0':
+        ref: 'v2.7.0'
+        commit: 'sha1-1342457921f4894b882889c5beaa42ff39d417e4'
         owner_id: 216188
         repo_id: 1404951382
         uses:
